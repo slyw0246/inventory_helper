@@ -144,14 +144,14 @@
 </head>
 <body>
     <nav class="navbar">
-        <h1>McGill Tree Planting Guide </h1>
+        <h1>McGill Tree Guide </h1>
         <ul class="nav-links">
             <li><a href="">Species List</a></li>
             <li><a href="">Soil Collection</a></li>
             <li><a href="">Historical Ecology</a></li>
         </ul>
     </nav>
-    <h1 id="title">Tree Species to Plant in Different Areas on Campus</h1>
+    <h1 id="title">Tree Inventory Helper</h1>
     <h1>Enter your requirement</h1>
     <input id="input" type="text" placeholder="Text">
     <button onclick="storeInput()">Submit</button>
@@ -177,7 +177,7 @@
         //add a source 
         map.addSource('McgillTrees', { 
             type: 'geojson', 
-            data: 'tree_mcgill_shp.geojson'}); 
+            data: 'tree_mcgill_shp1.geojson'}); 
         // add map layer using 'ShirleyData' as source
         map.addLayer({ 
             id: "trees", // create id for later use in animation, toggle, and popup functions
@@ -190,12 +190,28 @@
             // add color and width to the line
             paint: {
                 'circle-radius': 5, // make the line more visible
-                'circle-color': '#3275F0', // color blue
+                'circle-color': 'pink', 
                 //'line-opacity': 0.4 // opacity for dash line animation
             } // from mapbox website code about loading geojson in mapbox
         });}
         // add map layer for dash line animation
-        )
+    )
+
+    map.on('click', 'trees', (e) => {
+        new mapboxgl.Popup() // call a built in function mapboxgl.Popup()
+            .setLngLat(e.features[0].geometry.coordinates.slice()) // get the coordinate of e
+            .setHTML(e.features[0].properties.nomsc) // set the HTML of the popup as the description in geoJSON of the layer
+            .addTo(map); // add the popup to map
+    });
+
+    map.on('mouseenter', 'trees', () => {
+        map.getCanvas().style.cursor = 'pointer'; // built in function to change the cursor to a pointer
+    });
+
+    // Change it back to a normal curosr when it leaves the feature
+    map.on('mouseleave', 'trees', () => {
+        map.getCanvas().style.cursor = ''; // built in function to change the cursor back to normal
+    });
 
 </script>
 </body>
